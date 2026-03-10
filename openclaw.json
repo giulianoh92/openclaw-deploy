@@ -23,6 +23,15 @@
         "mode": "safeguard",
         "model": "anthropic/claude-haiku-4-5",
         "reserveTokensFloor": 20000
+      },
+      "heartbeat": {
+        "every": "30m",
+        "target": "last",
+        "activeHours": {
+          "start": "08:00",
+          "end": "23:00",
+          "timezone": "America/Argentina/Buenos_Aires"
+        }
       }
     }
   }
