@@ -16,7 +16,8 @@
   },
   "agents": {
     "defaults": {
-      "workspace": "/vault"
+      "workspace": "/vault",
+      "model": "anthropic/claude-sonnet-4-6"
     }
   }
 }
