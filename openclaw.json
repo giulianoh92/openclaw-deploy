@@ -8,13 +8,15 @@
       "botToken": "${TELEGRAM_BOT_TOKEN}",
       "dmPolicy": "pairing",
       "groups": {
-        "requireMention": true
+        "*": {
+          "requireMention": true
+        }
       }
     }
   },
-  "skills": {
-    "obsidian": {
-      "vaultPath": "/vault"
+  "agents": {
+    "defaults": {
+      "workspace": "/vault"
     }
   }
 }
