@@ -1,0 +1,55 @@
+name: Deploy OpenClaw
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    name: Deploy to VPS
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            set -euo pipefail
+
+            DEPLOY_DIR="${{ secrets.DEPLOY_DIR || '/opt/openclaw-deploy' }}"
+
+            echo "==> Pulling latest deploy config..."
+            cd "${DEPLOY_DIR}"
+            git pull --rebase --autostash
+
+            # Leer VAULT_DIR desde .env del deploy
+            source "${DEPLOY_DIR}/.env"
+            VAULT_DIR="${VAULT_DIR:-/opt/vault}"
+
+            echo "==> Pulling latest vault..."
+            cd "${VAULT_DIR}"
+            git pull --rebase --autostash
+
+            echo "==> Pulling Docker images..."
+            cd "${DEPLOY_DIR}"
+            docker compose pull
+
+            echo "==> Restarting services..."
+            docker compose up -d --remove-orphans
+
+            echo "==> Waiting for health check..."
+            for i in $(seq 1 30); do
+                if docker compose exec -T openclaw-gateway wget --spider -q http://localhost:18789/healthz 2>/dev/null; then
+                    echo "==> Health check passed!"
+                    exit 0
+                fi
+                echo "    Attempt ${i}/30..."
+                sleep 2
+            done
+
+            echo "==> Health check failed! Container logs:"
+            docker compose logs --tail=50 openclaw-gateway
+            exit 1
