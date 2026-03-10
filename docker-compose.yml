@@ -11,6 +11,9 @@ services:
       - ./openclaw.json:/home/node/.openclaw/openclaw.json:ro
       - ./SOUL.md:/home/node/.openclaw/SOUL.md:ro
       - ${VAULT_DIR:-/opt/vault}:/vault
+      - ${SSH_KEY_PATH:-~/.ssh/vault_deploy}:/home/node/.ssh/id_ed25519:ro
+      - ${SSH_CONFIG_PATH:-~/.ssh/config}:/home/node/.ssh/config:ro
+      - ${SSH_KNOWN_HOSTS:-~/.ssh/known_hosts}:/home/node/.ssh/known_hosts:ro
     environment:
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
       - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
@@ -33,6 +36,9 @@ services:
       - ./openclaw.json:/home/node/.openclaw/openclaw.json:ro
       - ./SOUL.md:/home/node/.openclaw/SOUL.md:ro
       - ${VAULT_DIR:-/opt/vault}:/vault
+      - ${SSH_KEY_PATH:-~/.ssh/vault_deploy}:/home/node/.ssh/id_ed25519:ro
+      - ${SSH_CONFIG_PATH:-~/.ssh/config}:/home/node/.ssh/config:ro
+      - ${SSH_KNOWN_HOSTS:-~/.ssh/known_hosts}:/home/node/.ssh/known_hosts:ro
     environment:
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
       - OPENCLAW_GATEWAY_TOKEN=${OPENCLAW_GATEWAY_TOKEN}
